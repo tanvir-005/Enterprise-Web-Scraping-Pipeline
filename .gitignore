@@ -1,7 +1,22 @@
+
 .venv/
-*pycache*
+__pycache__/
+*.py[cod]
 .env
+
+# Generated crawl output
 *.db
 *.csv
 *.json
 *.xml
+
+# Python build artifacts
+build/
+dist/
+*.egg-info/
+
+# Scrapyd runtime artifacts
+eggs/
+logs/
+items/
+twistd.pid

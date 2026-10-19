@@ -10,7 +10,7 @@ from itemadapter import ItemAdapter
 class BookPipeline:
     """Normalize scraped book data."""
 
-    def process_item(self, item, spider):
+    def process_item(self, item):
         """Clean text fields, price, and availability."""
         adapter = ItemAdapter(item)
 
@@ -45,7 +45,14 @@ class BookPipeline:
 class SQLitePipeline:
     """Store normalized book items in SQLite."""
 
-    def open_spider(self, spider):
+    @classmethod
+    def from_crawler(cls, crawler):
+        """Create the pipeline with access to the crawler."""
+        pipeline = cls()
+        pipeline.crawler = crawler
+        return pipeline
+
+    def open_spider(self):
         """Open the database and prepare the books table."""
         database_path = Path(__file__).resolve().parent.parent / "books.db"
 
@@ -68,12 +75,12 @@ class SQLitePipeline:
         self.cursor.execute("DELETE FROM books")
         self.connection.commit()
 
-        spider.logger.info(
+        self.crawler.spider.logger.info(
             "SQLite database opened: %s",
             database_path,
         )
 
-    def process_item(self, item, spider):
+    def process_item(self, item):
         """Insert a normalized book into the database."""
         adapter = ItemAdapter(item)
 
@@ -100,8 +107,10 @@ class SQLitePipeline:
 
         return item
 
-    def close_spider(self, spider):
+    def close_spider(self):
         """Close the database connection."""
         self.connection.close()
 
-        spider.logger.info("SQLite database connection closed.")
+        self.crawler.spider.logger.info(
+            "SQLite database connection closed."
+        )
