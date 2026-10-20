@@ -22,7 +22,7 @@ A Scrapy-based pipeline that scrapes book data from [Books to Scrape](https://bo
 ## Setup
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/tanvir-005/Enterprise-Web-Scraping-Pipeline.git
 cd Enterprise-Web-Scraping-Pipeline
 uv sync --frozen
 ```
